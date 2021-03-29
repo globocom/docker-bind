@@ -1,0 +1,15 @@
+zone "servicoa" {
+  type master;
+  file "/data/bind/db.servicoa";
+};
+
+zone "servicob" {
+  type master;
+  file "/data/bind/db.servicob";
+};
+
+zone "servicoc" {
+  type master;
+  file "/data/bind/db.servicoc";
+};
+
