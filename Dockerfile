@@ -1,16 +1,26 @@
-FROM ruby:2.7.2
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg -o /root/yarn-pubkey.gpg && apt-key add /root/yarn-pubkey.gpg
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install -y --no-install-recommends nodejs yarn
-WORKDIR /app
-COPY ./app /app
-RUN gem install bundler:2.2.15 && bundle install
-RUN yarn install && rails webpacker:install
+FROM ubuntu:bionic
 
+ENV BIND_USER=bind \
+    DATA_DIR=/data
 
-#COPY entrypoint.sh /usr/bin/
-#RUN chmod +x /usr/bin/entrypoint.sh
-#ENTRYPOINT ["entrypoint.sh"]
-EXPOSE 3000
+RUN apt-get update \
+  && apt-get install bind9 bind9utils bind9-doc -y \ 
+  && apt-get install dnsutils -y \
+  && apt-get install vim -y \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  && rm -rf /var/lib/apt/lists/* 
 
-ENTRYPOINT ["rails", "server", "-b", "0.0.0.0"]
+#arquivos de configuração
+COPY entrypoint.sh /sbin/entrypoint.sh 
+
+COPY create-key.sh /opt/create-key.sh
+
+COPY named.conf /etc/bind/named.conf
+
+RUN chmod 755 /sbin/entrypoint.sh /opt/create-key.sh 
+
+EXPOSE  53/udp 53/tcp
+
+ENTRYPOINT ["/sbin/entrypoint.sh"]
+
+CMD ["/usr/sbin/named"]
