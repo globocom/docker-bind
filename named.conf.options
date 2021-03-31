@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021, Globo.com (https://github.com/globocom)
+ *
+ * License: MIT
+ */
+ 
 options {
 	directory "/var/cache/bind";
 
