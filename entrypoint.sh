@@ -1,10 +1,8 @@
-/*
- * Copyright (c) 2021, Globo.com (https://github.com/globocom)
- *
- * License: MIT
- */
- 
 #!/bin/bash
+
+# Copyright (c) 2021, Globo.com (https://github.com/globocom)
+# License: MIT
+
 set -e
 
 BIND_DATA_DIR=${DATA_DIR}/bind
